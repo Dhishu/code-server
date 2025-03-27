@@ -9,15 +9,15 @@ RUN apt-get update && apt-get install -y \
     lsb-release \
     && rm -rf /var/lib/apt/lists/*
 
-# Install code-server using the custom install.sh script
+# Copy and install code-server using the custom install.sh script
 COPY install.sh /install.sh
-RUN bash install.sh --method standalone --prefix /usr/local
+RUN chmod +x /install.sh && bash /install.sh --method standalone --prefix /usr/local
 
 # Expose the port that code-server will run on
 EXPOSE 8080
 
-# Set the environment variable for code-server
-ENV PASSWORD="your_password_here"
+# Set the environment variable for code-server (you can override this when running the container)
+ENV PASSWORD=${PASSWORD:-"your_default_password"}
 
 # Command to run code-server
 CMD ["code-server", "--host", "0.0.0.0", "--port", "8080"]
