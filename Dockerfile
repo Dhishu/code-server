@@ -10,8 +10,8 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install code-server using the custom install.sh script
-COPY install.sh /install.sh
-RUN bash ./install.sh --method standalone --prefix /usr/local
+COPY install.sh ./install.sh
+RUN bash install.sh --method standalone --prefix /usr/local
 
 # Expose the port that code-server will run on
 EXPOSE 8080
