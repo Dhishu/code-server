@@ -1,0 +1,32 @@
+name: Auto Install Code-Server on Railway
+
+on:
+  push:
+    branches:
+      - main  # Main branch එකේ commit push කිරීම
+
+jobs:
+  install_code_server:
+    runs-on: ubuntu-latest  # Ubuntu image එක මත run කරන්න
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2  # GitHub repository එක checkout කිරීම
+      
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential pkg-config python3
+          npm config set python python3
+
+      - name: Install code-server
+        run: |
+          curl -fsSL https://code-server.dev/install.sh | sh  # Code-server install script එක run කිරීම
+
+      - name: Verify Installation
+        run: |
+          code-server --version  # Code-server version එක confirm කිරීම
+
+      - name: Push to Railway
+        run: |
+          railway up  # Railway project එක push කිරීම
