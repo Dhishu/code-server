@@ -1,14 +1,14 @@
 <!doctype html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8" />
     <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"
     />
     <meta
-      http-equiv="Content-Security-Policy"
-      content="style-src 'self'; script-src 'self' 'unsafe-inline'; manifest-src 'self'; img-src 'self' data:; font-src 'self' data:;"
+        http-equiv="Content-Security-Policy"
+        content="style-src 'self' https://cdn.tailwindcss.com; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; manifest-src 'self'; img-src 'self' data:; font-src 'self' data:;"
     />
     <meta name="color-scheme" content="light dark" />
     <title>{{I18N_LOGIN_TITLE}}</title>
@@ -17,46 +17,77 @@
     <link rel="manifest" href="{{BASE}}/manifest.json" crossorigin="use-credentials" />
     <link rel="apple-touch-icon" sizes="192x192" href="{{CS_STATIC_BASE}}/src/browser/media/pwa-icon-192.png" />
     <link rel="apple-touch-icon" sizes="512x512" href="{{CS_STATIC_BASE}}/src/browser/media/pwa-icon-512.png" />
-    <link href="{{CS_STATIC_BASE}}/src/browser/pages/global.css" rel="stylesheet" />
-    <link href="{{CS_STATIC_BASE}}/src/browser/pages/login.css" rel="stylesheet" />
-    <meta id="coder-options" data-settings="{{OPTIONS}}" />
-  </head>
-  <body>
-    <div class="center-container">
-      <div class="card-box">
-        <div class="header">
-          <h1 class="main">{{WELCOME_TEXT}}</h1>
-          <div class="sub">{{I18N_LOGIN_BELOW}} {{PASSWORD_MSG}}</div>
-        </div>
-        <div class="content">
-          <form class="login-form" method="post">
-            <input class="user" type="text" autocomplete="username" />
-            <input id="base" type="hidden" name="base" value="{{BASE}}" />
-            <input id="href" type="hidden" name="href" value="" />
-            <div class="field">
-              <input
-                required
-                autofocus
-                class="password"
-                type="password"
-                placeholder="{{I18N_PASSWORD_PLACEHOLDER}}"
-                name="password"
-                autocomplete="current-password"
-              />
-              <input class="submit -button" value="{{I18N_SUBMIT}}" type="submit" />
-            </div>
-            {{ERROR}}
-          </form>
-        </div>
-      </div>
-    </div>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
-      // Inform the backend about the path since the proxy might have rewritten
-      // it out of the headers and cookies must be set with absolute paths.
-      const el = document.getElementById("href")
-      if (el) {
-        el.value = location.href
-      }
+        // Tailwind CSS සඳහා Dark Mode සැකසුම් (Optional - OS setting එක අනුව වැඩ කරයි)
+        tailwind.config = {
+            darkMode: 'media' // or 'class' if you want to toggle manually
+        }
     </script>
-  </body>
+    <meta id="coder-options" data-settings="{{OPTIONS}}" />
+    <style>
+        /* Custom styles අවශ්‍ය නම් මෙතනට එකතු කරන්න පුළුවන්,
+           නැතිනම් Tailwind utility classes පාවිච්චි කරන්න */
+        body {
+            /* Tailwind utility classes මගින් background සහ font සැකසීම */
+            @apply bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans;
+        }
+        /* Placeholder වර්ණය Dark mode එකට වෙනස් කිරීම (Optional) */
+        input::placeholder {
+             @apply text-gray-400 dark:text-gray-500;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen">
+    <div class="center-container w-full max-w-md px-4">
+        <div class="card-box bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 md:p-8">
+            <div class="header text-center mb-6">
+                 <h1 class="main text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2">{{WELCOME_TEXT}}</h1>
+                <div class="sub text-sm text-gray-600 dark:text-gray-400">{{I18N_LOGIN_BELOW}} {{PASSWORD_MSG}}</div>
+            </div>
+            <div class="content">
+                <form class="login-form space-y-4" method="post">
+                    <input class="user" type="text" autocomplete="username" style="display: none;" /> <input id="base" type="hidden" name="base" value="{{BASE}}" />
+                    <input id="href" type="hidden" name="href" value="" />
+
+                    <div class="field">
+                        <label for="password" class="sr-only">{{I18N_PASSWORD_PLACEHOLDER}}</label> <input
+                            id="password"
+                            required
+                            autofocus
+                            class="password w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+                            type="password"
+                            placeholder="{{I18N_PASSWORD_PLACEHOLDER}}"
+                            name="password"
+                            autocomplete="current-password"
+                        />
+                    </div>
+
+                     <input
+                        class="submit w-full px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
+                        value="{{I18N_SUBMIT}}"
+                        type="submit"
+                    />
+
+                    <div class="error-message text-sm text-red-600 dark:text-red-400 text-center h-4"> {{ERROR}} </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Inform the backend about the path since the proxy might have rewritten
+        // it out of the headers and cookies must be set with absolute paths.
+        const el = document.getElementById("href");
+        if (el) {
+            el.value = location.href;
+        }
+
+        // Optional: Autofocus on password field if it's empty (useful if browser doesn't do it)
+        // const passwordField = document.getElementById('password');
+        // if (passwordField && !passwordField.value) {
+        //    passwordField.focus();
+        // }
+    </script>
+</body>
 </html>
